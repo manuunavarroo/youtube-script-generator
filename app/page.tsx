@@ -33,10 +33,11 @@ export default function HomePage() {
       setVideoUrl(''); // Clear fields on success
       setTopic('');
     } catch (error) {
-      setMessage(`Error: ${error.message}`);
-    } finally {
-      setIsLoading(false);
-    }
+      if (error instanceof Error) {
+        setMessage(`Error: ${error.message}`);
+      } else {
+        setMessage('An unknown error occurred.');
+      }
   };
 
   return (
