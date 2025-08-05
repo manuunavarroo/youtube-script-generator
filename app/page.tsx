@@ -13,7 +13,7 @@ export default function HomePage() {
     event.preventDefault();
     setIsLoading(true);
     setMessage('');
-
+  
     try {
       const response = await fetch('/api/generate-script', {
         method: 'POST',
@@ -22,15 +22,15 @@ export default function HomePage() {
         },
         body: JSON.stringify({ videoUrl, topic }),
       });
-
+  
       const result = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(result.error || 'Something went wrong');
       }
-
+  
       setMessage('Success! Your request has been sent to the script generator.');
-      setVideoUrl(''); // Clear fields on success
+      setVideoUrl('');
       setTopic('');
     } catch (error) {
       if (error instanceof Error) {
@@ -38,6 +38,9 @@ export default function HomePage() {
       } else {
         setMessage('An unknown error occurred.');
       }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
