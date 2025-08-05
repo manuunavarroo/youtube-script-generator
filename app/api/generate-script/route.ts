@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 
 // The URL for your n8n webhook
-const WEBHOOK_URL = 'https://manuel-fanvue.app.n8n.cloud/webhook-test/generate-script';
+const WEBHOOK_URL = 'https://manuel-fanvue.app.n8n.cloud/webhook/generate-script';
 
 export async function POST(request: Request) {
   try {
