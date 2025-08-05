@@ -32,7 +32,7 @@ export default function HomePage() {
       setMessage('Success! Your request has been sent to the script generator.');
       setVideoUrl(''); // Clear fields on success
       setTopic('');
-    } catch (error: any) {
+    } catch (error) {
       setMessage(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
