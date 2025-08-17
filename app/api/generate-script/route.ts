@@ -2,18 +2,18 @@
 import { NextResponse } from 'next/server';
 
 // The URL for your n8n webhook
-const WEBHOOK_URL = 'https://manuel-fanvue.app.n8n.cloud/webhook/generate-script';
+const WEBHOOK_URL = 'https://fanvue1.app.n8n.cloud/webhook/generate-script';
 
 export async function POST(request: Request) {
   try {
     // 1. Parse the request body from our frontend
     const body = await request.json();
-    const { videoUrl, topic } = body;
+    const { videoUrl, topic, email } = body; // <-- Destructure email
 
     // 2. Basic validation
-    if (!videoUrl || !topic) {
+    if (!videoUrl || !topic || !email) { // <-- Add email to validation
       return NextResponse.json(
-        { error: 'Missing videoUrl or topic in request body' },
+        { error: 'Missing videoUrl, topic, or email in request body' },
         { status: 400 }
       );
     }
@@ -25,14 +25,14 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        videoUrl: videoUrl, // Ensure the keys match what n8n expects
+        videoUrl: videoUrl,
         topic: topic,
+        email: email, // <-- Add email to the webhook body
       }),
     });
 
     // 4. Check if the webhook call was successful
     if (!webhookResponse.ok) {
-      // If the webhook returns an error, forward that error to our frontend
       const errorText = await webhookResponse.text();
       console.error('Webhook error:', errorText);
       return NextResponse.json(
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     } else {
       console.error('API Route Error:', error);
     }
-  
+    
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
