@@ -6,6 +6,7 @@ import { useState, FormEvent } from 'react';
 export default function HomePage() {
   const [videoUrl, setVideoUrl] = useState('');
   const [topic, setTopic] = useState('');
+  const [email, setEmail] = useState(''); // <-- Add state for email
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -13,25 +14,27 @@ export default function HomePage() {
     event.preventDefault();
     setIsLoading(true);
     setMessage('');
-  
+
     try {
       const response = await fetch('/api/generate-script', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl, topic }),
+        // Include email in the request body
+        body: JSON.stringify({ videoUrl, topic, email }),
       });
-  
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(result.error || 'Something went wrong');
       }
-  
+
       setMessage('Success! Your request has been sent to the script generator.');
       setVideoUrl('');
       setTopic('');
+      setEmail(''); // <-- Clear email field on success
     } catch (error) {
       if (error instanceof Error) {
         setMessage(`Error: ${error.message}`);
@@ -50,7 +53,7 @@ export default function HomePage() {
           AI Script Generator
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-8">
-          Enter a video URL and a topic to generate a new script.
+          Enter a video URL, a topic, and your email to generate a new script.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -79,6 +82,22 @@ export default function HomePage() {
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               placeholder="e.g., My top 10 Amazon gadgets"
+              required
+              className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+
+          {/* New Email Input Field */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
               required
               className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
